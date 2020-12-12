@@ -4,6 +4,7 @@ const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+let savedNotes = JSON.parse(fs.readFileSync('./Develop/db/db.json'));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -14,7 +15,6 @@ app.get('/api/notes', (req, res) => {
 });
 
 app.get('/api/notes/:id', (req, res) => {
-  let savedNotes = JSON.parse(fs.readFileSync('./Develop/db/db.json'));
   res.json(savedNotes[Number(req.params.id)]);
 });
 
@@ -27,9 +27,8 @@ app.get('*', (req, res) => {
 });
 
 app.post('/api/notes', (req, res) => {
-  let savedNotes = JSON.parse(fs.readFileSync('./Develop/db/db.json'));
-  let newNote = req.body;
-  let id = savedNotes.length.toString();
+  const newNote = req.body;
+  const id = savedNotes.length.toString();
   newNote.id = id;
   savedNotes.push(newNote);
 
@@ -39,12 +38,11 @@ app.post('/api/notes', (req, res) => {
 });
 
 app.delete('/api/notes/:id', (req, res) => {
-  let savedNotes = JSON.parse(fs.readFileSync('./Develop/db/db.json'));
-  let noteID = req.params.id;
+  const noteID = req.params.id;
   let newID = 0;
   console.log(`Deleting note with ID ${noteID}`);
   savedNotes = savedNotes.filter(deleteNote => {
-    return deleteNote.id != noteID;
+    return deleteNote.id !== noteID;
   });
 
   for (deleteNote of savedNotes) {
