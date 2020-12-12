@@ -8,8 +8,6 @@ const PORT = process.env.PORT || 3001;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-let notes = [];
-
 app.get('/api/notes', (req, res) => {
   res.sendFile(path.join(__dirname, './Develop/db/db.json'));
 });
@@ -23,10 +21,13 @@ app.get('*', (req, res) => {
 });
 
 app.post('/api/notes', (req, res) => {
+  let savedNotes = JSON.parse(fs.readFileSync('./Develop/db/db.json'));
   const newNote = req.body;
-  console.log(newNote);
-  notes.push(newNote);
-  res.json(newNote);
+  savedNotes.push(newNote);
+
+  fs.writeFileSync('./Develop/db/db.json', JSON.stringify(savedNotes));
+  console.log('note saved');
+  res.json(savedNotes);
 });
 
 app.listen(PORT, () => {
