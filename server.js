@@ -13,6 +13,11 @@ app.get('/api/notes', (req, res) => {
   res.sendFile(path.join(__dirname, './Develop/db/db.json'));
 });
 
+app.get('/api/notes/:id', (req, res) => {
+  let savedNotes = JSON.parse(fs.readFileSync('./Develop/db/db.json'));
+  res.json(savedNotes[Number(req.params.id)]);
+});
+
 app.get('/notes', (req, res) => {
   res.sendFile(path.join(__dirname, './Develop/public/notes.html'));
 });
@@ -23,11 +28,31 @@ app.get('*', (req, res) => {
 
 app.post('/api/notes', (req, res) => {
   let savedNotes = JSON.parse(fs.readFileSync('./Develop/db/db.json'));
-  const newNote = req.body;
+  let newNote = req.body;
+  let id = savedNotes.length.toString();
+  newNote.id = id;
   savedNotes.push(newNote);
 
   fs.writeFileSync('./Develop/db/db.json', JSON.stringify(savedNotes));
-  console.log('note saved');
+  console.log(`Note saved with ID: ${id}`);
+  res.json(savedNotes);
+});
+
+app.delete('/api/notes/:id', (req, res) => {
+  let savedNotes = JSON.parse(fs.readFileSync('./Develop/db/db.json'));
+  let noteID = req.params.id;
+  let newID = 0;
+  console.log(`Deleting note with ID ${noteID}`);
+  savedNotes = savedNotes.filter(deleteNote => {
+    return deleteNote.id != noteID;
+  });
+
+  for (deleteNote of savedNotes) {
+    deleteNote.id = newID.toString();
+    newID++;
+  }
+
+  fs.writeFileSync('./Develop/db/db.json', JSON.stringify(savedNotes));
   res.json(savedNotes);
 });
 
