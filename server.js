@@ -28,21 +28,21 @@ app.get('*', (req, res) => {
 
 app.post('/api/notes', (req, res) => {
   const newNote = req.body;
-  const id = savedNotes.length.toString();
-  newNote.id = id;
+  const noteId = savedNotes.length.toString();
+  newNote.id = noteId;
   savedNotes.push(newNote);
 
   fs.writeFileSync('./Develop/db/db.json', JSON.stringify(savedNotes));
-  console.log(`Note saved with ID: ${id}`);
+  console.log(`Note saved with ID: ${noteId}`);
   res.json(savedNotes);
 });
 
 app.delete('/api/notes/:id', (req, res) => {
-  const noteID = req.params.id;
+  const noteId = req.params.id;
   let newID = 0;
-  console.log(`Deleting note with ID ${noteID}`);
+  console.log(`Deleting note with ID ${noteId}`);
   savedNotes = savedNotes.filter(deleteNote => {
-    return deleteNote.id !== noteID;
+    return deleteNote.id !== noteId;
   });
 
   for (deleteNote of savedNotes) {
