@@ -1,1 +1,5 @@
-[{"title":"Here's a note!","text":"Right there!","id":"0"}]
+[
+  { "title": "Here's a note!", "text": "Right there!", "id": "0" },
+  { "title": "On that note..", "text": "Look at my cool app!", "id": "1" },
+  { "title": "NOTES!", "text": "yeah notes!", "id": "2" }
+]
